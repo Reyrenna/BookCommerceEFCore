@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookCommerceEFCore.Models
 {
@@ -16,12 +17,11 @@ namespace BookCommerceEFCore.Models
         public required string Author { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public required string Genre { get; set; }
-
-        [Required]
         public required bool IsStock { get; set; }
 
         public string? ImageUrl { get; set; }
+
+        public ICollection<Genre> Genres { get; set; }
+
     }
 }

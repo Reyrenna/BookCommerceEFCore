@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookCommerceEFCore.Migrations
 {
     [DbContext(typeof(BookCommerceEFCoreDbContext))]
-    [Migration("20250310181028_Initial")]
+    [Migration("20250312152208_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -36,11 +36,6 @@ namespace BookCommerceEFCore.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Genre")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -55,6 +50,52 @@ namespace BookCommerceEFCore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("BookCommerceEFCore.Models.Genre", b =>
+                {
+                    b.Property<Guid>("IdGenre")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("GenreName")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.HasKey("IdGenre");
+
+                    b.ToTable("Genres");
+                });
+
+            modelBuilder.Entity("BookGenre", b =>
+                {
+                    b.Property<Guid>("BooksId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GenresIdGenre")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("BooksId", "GenresIdGenre");
+
+                    b.HasIndex("GenresIdGenre");
+
+                    b.ToTable("BookGenre");
+                });
+
+            modelBuilder.Entity("BookGenre", b =>
+                {
+                    b.HasOne("BookCommerceEFCore.Models.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookCommerceEFCore.Models.Genre", null)
+                        .WithMany()
+                        .HasForeignKey("GenresIdGenre")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
